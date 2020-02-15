@@ -1,0 +1,25 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "Employee management system.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/efrenmarin45/Employee-Tracker.git"
+  },
+  "author": "efrenmarin45",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/efrenmarin45/Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/efrenmarin45/Employee-Tracker#readme",
+  "dependencies": {
+    "ascii-art": "^2.5.0",
+    "console-table": "^0.1.2",
+    "inquirer": "^7.0.4",
+    "mysql": "^2.18.1"
+  }
+}
