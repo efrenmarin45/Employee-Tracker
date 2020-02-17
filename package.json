@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/efrenmarin45/Employee-Tracker#readme",
   "dependencies": {
-    "ascii-art": "^2.5.0",
-    "console-table": "^0.1.2",
+    "chalk": "^3.0.0",
+    "clear": "^0.1.0",
+    "console.table": "^0.10.0",
+    "figlet": "^1.2.4",
     "inquirer": "^7.0.4",
     "mysql": "^2.18.1"
   }
