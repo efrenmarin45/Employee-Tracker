@@ -3,40 +3,31 @@ const inquirer = require("inquirer");
 const cliArt = require("figlet");
 const clear = require("clear");
 const chalk = require("chalk");
-// const dbconnect = require("./DB-Files/connection");
-const db = require("./DB-Files/dataQueries");
+const mysql = require("mysql");
+// const util = require("util");
 
 
 
 
-// const connection = mysql.createConnection({
-//     host: "localhost",
-//     port: 3306,
-//     user: "root",
-//     password: "Wander89!",
-//     database: "employee_trackerDB"
-// });
-// connection.connect(function(err) {
-//     if (err) throw err;
+const connection = mysql.createConnection({
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "Wander89!",
+    database: "employee_trackerDB"
+});
+connection.connect(function(err) {
+    if (err) throw err;
 
-//     clear();
-
-//     console.log(chalk.green(cliArt.textSync('Employee Tracker', {horizontalLayout: 'fitted'})));
-
-//     initiate();
-// });
-
-// connection.query = util.promisify(connection.query);
-
-
-start();
-
-function start(){
     clear();
 
     console.log(chalk.green(cliArt.textSync('Employee Tracker', {horizontalLayout: 'fitted'})));
+
     initiate();
-}
+});
+
+// connection.query = util.promisify(connection.query);
+
 
 function initiate(){
     inquirer
@@ -182,93 +173,78 @@ function addDepartment(){
         })
 }
 
-async function addEmployee(){
-    const roles = await db.readRoles();
-    const employee = await db.readEmployees();
+function addEmployee(){
+    readRoles().then(roles => {
+        const userRoleChoice = roles.map(({title: name, id: value}) => ({name, value}));
 
-    // readRoles().then(roles => {
-        // const userRoleChoice = roles.map(( {id, title} ) => ({
-        //     name: title,
-        //     value: id
-        // }));
-        // inquirer
-            const newEmployee = await prompt([
-                {
-                    name: "firstName",
-                    type: "input",
-                    message: "Please enter the employee's first name:"
-                },
-                {
-                    name: "lastName",
-                    type: "input",
-                    message: "Please enter the employee's last name:"
-                }
-            ]);
-            const userRoleChoice = roles.map(( {id, title} ) => ({
-                name: title,
-                value: id
-            }));
-
-            const {employeeRole} = await prompt(
-                {
-                    name: "employeeRole",
-                    type: "list",
-                    message: "Please select the employee's job role:",
-                    choices: userRoleChoice
-                });
-
-                newEmployee.role_id = employeeRole;
-                
-                const userManagerChoice = employee.map(( {id, first_name, last_name}) => ({
-                    name: `${first_name} ${last_name}`,
-                    value: id
-                }));
-
-                userManagerChoice.push({ name: "None", value: null });
-
-                const {employeesManager} = await prompt (
-                    {
-                    name: "employeesManager",
-                    type: "list",
-                    message: "Please choose this employee's manager:"
-                    });
-
-                userManagerChoice.manager_id = employeesManager;
-
-                await db.addedEmployee(newEmployee);
-
-                console.log("Employee added succesfully!")
-                
-                start();
-
-            
-            // .then(answer => {
-            //     connection.query(
-            //         "INSERT INTO employee SET ?",
-            //         {
-            //             first_name: answer.firstName,
-            //             last_name: answer.lastName,
-            //             role_id: answer.employeeRole,
-            //             manager_id: answer.employeesManager
-            //         },
-            //         (err => {
-            //             if (err) throw err;
-            //             console.log("Employee added succesfully!")
-            //             start();
-            //         })
-            //     )
-            // })
+    readManager().then(roles => {
+        const userManagerChoice = roles.map(({title: name, id: value}) => ({name, value}));
     
+    
+        inquirer
+        .prompt([
+            {
+                name: "firstName",
+                type: "input",
+                message: "Please enter the employee's first name:"
+            },
+            {
+                name: "lastName",
+                type: "input",
+                message: "Please enter the employee's last name:"
+            },
+            {
+                name: "employeeRole",
+                type: "list",
+                message: "Please select the employee's job role:",
+                choices: userRoleChoice
+            },
+            {
+                name: "employeesManager",
+                type: "list",
+                message: "Please choose this employee's manager:",
+                choices: userManagerChoice
+            }
+        ])
+        .then(answer => {
+            connection.query(
+                "INSERT INTO employee SET ?",
+                {
+                    first_name: answer.firstName,
+                    last_name: answer.lastName,
+                    role_id: answer.employeeRole,
+                    manager_id: answer.employeesManager
+                },
+                (err => {
+                    if (err) throw err;
+                    console.log("Employee added succesfully!")
+                    initiate();
+                })
+            )
+            })
+    })
+})
+};
+
+
+function readRoles(){
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT * FROM roles;",
+        function (err, res){
+            if(err) reject (err);
+            resolve(res);
+        })
+    })
 }
 
-// function readRoles(){
-//     return new Promise((resolve, reject) => {
-//         connection.query("SELECT * FROM roles;",
-//         function (err, res){
-//             if(err) reject (err);
-//             resolve(res);
-//         })
-//     })
-// }
+function readManager(){
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT id, first_name, last_name FROM employee WHERE manager_id > 0",
+        function (err, res){
+            if(err) reject (err);
+            resolve(res);
+        })
+    })
+}
 
 
