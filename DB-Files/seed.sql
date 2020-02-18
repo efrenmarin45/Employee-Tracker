@@ -68,3 +68,18 @@ VALUES ("Secretary", 32000, 7);
 INSERT INTO roles (title, salary, department_id)
 VALUES ("Office Manager", 32000, 7);
 
+-- Employees
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Jayden", "Marin", 1, 1);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Alshon", "Jeffery", 2, null);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Carson", "Wentz", 3, 2);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Nelson", "Agholor", 4, null);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Desaun", "Jackson", 5, 3);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Zach", "Ertz", 6, null);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Donovan", "Mcnabb", 7, 4);
