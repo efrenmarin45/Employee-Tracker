@@ -351,12 +351,65 @@ function viewEmployees(){
             console.log(err);
             }
         })
-    }    
+    }  
+    
+    
+function employeeDepartment(){
+    readDept().then(department => {
+        const employeeDept = department.map(({name: name, value: id}) => ({name, id}));
+        inquirer
+            .prompt([
+                {
+                    name: "employeeDepartment",
+                    type: "list",
+                    message: "Please select the department that you'd like to view the employees for:",
+                    choices: employeeDept,
+                }
+                ])
+                .then(answer => {
+            let query = "SELECT * FROM roles WHERE department_id = ?";
+
+                    connection.query(query, [answer.employeeDepartment], 
+                        async function(err, res) {
+                            if (err) throw err;
+
+                            try {
+                                console.table("employee", res);
+                                await initiate();
+                            }
+                            catch(err) {
+                                console.log(err);
+                            }
+                    }
+                )})
+                .catch(err => {
+                    console.log(err);
+                })
+                })};
 
 
 
 
+        //     connection.query("SELECT * FROM roles;",
+        //     async function (err, res){
+        //         try {
+        //             if (err) throw err;
+        //             console.table("roles", res);
+        //             await initiate();
+        //         }
+        //         catch(err){
+        //         console.log(err);
+        //         }
+        //     })
+        // }
 
+
+    
+
+
+
+
+        // SELECT employee.id, employee.first_name, employee.last_name, roles.title FROM employee LEFT JOIN roles on employee.role_id = roles.id LEFT JOIN department department on roles.department_id = department.id WHERE department.id = ?;",
 
 
 
