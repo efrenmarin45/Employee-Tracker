@@ -367,14 +367,19 @@ function employeeDepartment(){
                 }
                 ])
                 .then(answer => {
-            let query = "SELECT * FROM roles WHERE department_id = ?";
+            // let query = "SELECT * FROM roles WHERE department_id = ?";
+
+
+            let query = "SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, roles.title FROM employee LEFT JOIN roles on roles.id = employee.role_id LEFT JOIN department ON department.id";
+
+
 
                     connection.query(query, [answer.employeeDepartment], 
                         async function(err, res) {
                             if (err) throw err;
 
                             try {
-                                console.table("employee", res);
+                                console.table(res);
                                 await initiate();
                             }
                             catch(err) {
