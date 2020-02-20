@@ -28,15 +28,13 @@ VALUES ("Sr. Software Engineer", 135000, 1);
 INSERT INTO roles (title, salary, department_id)
 VALUES ("Sales Associate", 28000, 2);
 INSERT INTO roles (title, salary, department_id)
-VALUES ("Sales Associate", 28000, 2);
-INSERT INTO roles (title, salary, department_id)
 VALUES ("Sales Lead", 29500, 2);
 
 -- Finance Roles
 INSERT INTO roles (title, salary, department_id)
 VALUES ("Accountant", 45000, 3);
 INSERT INTO roles (title, salary, department_id)
-VALUES ("Accountant", 45000, 3);
+VALUES ("Lead Accountant", 55000, 3);
 
 -- Legal Roles
 INSERT INTO roles (title, salary, department_id)
@@ -54,12 +52,6 @@ VALUES ("Marketing Team Lead", 40000, 5);
 INSERT INTO roles (title, salary, department_id)
 VALUES ("Support Rep", 32000, 6);
 INSERT INTO roles (title, salary, department_id)
-VALUES ("Support Rep", 32000, 6);
-INSERT INTO roles (title, salary, department_id)
-VALUES ("Support Rep", 32000, 6);
-INSERT INTO roles (title, salary, department_id)
-VALUES ("Support Rep", 32000, 6);
-INSERT INTO roles (title, salary, department_id)
 VALUES ("Support Team Lead", 36000, 6);
 
 -- Clerical Roles
@@ -69,17 +61,17 @@ INSERT INTO roles (title, salary, department_id)
 VALUES ("Office Manager", 32000, 7);
 
 -- Employees
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Jayden", "Marin", 1, 1);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
+INSERT INTO employee (first_name, last_name, role_id, manager_name)
+VALUES ("Jayden", "Marin", 1, "Bobby Flay");
+INSERT INTO employee (first_name, last_name, role_id, manager_name)
 VALUES ("Alshon", "Jeffery", 2, null);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Carson", "Wentz", 3, 2);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
+INSERT INTO employee (first_name, last_name, role_id, manager_name)
+VALUES ("Carson", "Wentz", 3, "Guy Fieri");
+INSERT INTO employee (first_name, last_name, role_id, manager_name)
 VALUES ("Nelson", "Agholor", 4, null);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Desaun", "Jackson", 5, 3);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
+INSERT INTO employee (first_name, last_name, role_id, manager_name)
+VALUES ("Desaun", "Jackson", 5, "Rachel Ray");
+INSERT INTO employee (first_name, last_name, role_id, manager_name)
 VALUES ("Zach", "Ertz", 6, null);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Donovan", "Mcnabb", 7, 4);
+INSERT INTO employee (first_name, last_name, role_id, manager_name)
+VALUES ("Donovan", "Mcnabb", 7, null);

@@ -4,7 +4,7 @@ const cliArt = require("figlet");
 const clear = require("clear");
 const chalk = require("chalk");
 const mysql = require("mysql");
-// const util = require("util");
+const util = require("util");
 
 
 
@@ -26,7 +26,7 @@ connection.connect(function(err) {
     initiate();
 });
 
-// connection.query = util.promisify(connection.query);
+connection.query = util.promisify(connection.query);
 
 
 function initiate(){
@@ -36,7 +36,7 @@ function initiate(){
             name: "userSelect",
             type: "list",
             message: "Please choose from the actions listed to proceed.",
-            choices: ["View an entry", "Add an entry", "Update an entry"]
+            choices: ["View an entry", "Add an entry", "Update an entry", "Exit Menu"]
             }
         ])
         .then(answer => {
@@ -49,10 +49,10 @@ function initiate(){
             else if (answer.userSelect === "Update an entry"){
                 updateEntry();
             }
-            else {
-                connection.end();
+            else if (answer.userSelect === "Exit Menu"){
+                endProgram();
             }
-        });
+});
 }
 
 function viewEntry(){
@@ -63,7 +63,7 @@ function viewEntry(){
                 type: "list",
                 message: "What would you like to view?",
                 choices: ["View departments", "View roles", "View employees", 
-                "View employees by department", "View employees by role", "Return to menu"]
+                "View employees by department", "View employees by role", "View managers", "Return to menu"]
             }
         ])
         .then(answer => {
@@ -81,6 +81,9 @@ function viewEntry(){
             }
             else if (answer.userView === "View employees by role"){
                 employeeRole();
+            }
+            else if (answer.userView === "View managers"){
+                viewManager();
             }
             else if (answer.userView === "Return to menu"){
                 initiate();
@@ -176,11 +179,6 @@ function addDepartment(){
 function addEmployee(){
     readRoles().then(roles => {
         const userRoleChoice = roles.map(({title: name, id: value}) => ({name, value}));
-
-    readManager().then(roles => {
-        const userManagerChoice = roles.map(({title: name, id: value}) => ({name, value}));
-    
-    
         inquirer
         .prompt([
             {
@@ -201,9 +199,8 @@ function addEmployee(){
             },
             {
                 name: "employeesManager",
-                type: "list",
-                message: "Please choose this employee's manager:",
-                choices: userManagerChoice
+                type: "input",
+                message: "Please enter the name of this employee's manager. If none, type NONE :",
             }
         ])
         .then(answer => {
@@ -213,18 +210,50 @@ function addEmployee(){
                     first_name: answer.firstName,
                     last_name: answer.lastName,
                     role_id: answer.employeeRole,
-                    manager_id: answer.employeesManager
+                    manager_name: answer.employeesManager
+
                 },
                 (err => {
                     if (err) throw err;
+
                     console.log("Employee added succesfully!")
                     initiate();
                 })
             )
             })
     })
-})
-};
+}
+
+function addRole(){
+    inquirer
+        .prompt([
+            {
+                name: "userRoleAdd",
+                type: "input",
+                message: "What is the name of the role you'd like to add?:"
+            },
+            {
+                name: "userSalaryAdd",
+                type: "input",
+                message: "What is the salary for this role? Numbers only :"
+            },
+        ])
+        .then(answer => {
+            connection.query(
+                "INSERT INTO roles SET ?",
+                {
+                    title: answer.userRoleAdd,
+                    salary: answer.userSalaryAdd
+                },
+                (err => {
+                    if (err) throw err;
+
+                    console.log("New role successfully added!")
+                    initiate();
+                })
+            )
+        })
+}
 
 
 function readRoles(){
@@ -237,14 +266,28 @@ function readRoles(){
     })
 }
 
-function readManager(){
-    return new Promise((resolve, reject) => {
-        connection.query("SELECT id, first_name, last_name FROM employee WHERE manager_id > 0",
-        function (err, res){
-            if(err) reject (err);
-            resolve(res);
-        })
-    })
+// function readManager(){
+//     return new Promise((resolve, reject) => {
+//         connection.query("SELECT manager.first_name, manager.last_name FROM manager;",
+//         function (err, res){
+//             if(err) reject (err);
+//             resolve(res);
+//         })
+//     })
+// }
+
+
+function endProgram() {
+    clear();
+    console.log(chalk.cyanBright(">>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<"));
+    console.log(chalk.blueBright(">>>>                                            <<<<"));
+    console.log(chalk.greenBright("****  Thank you for using Employee Tracker 1.0  ****"));
+    console.log(chalk.blueBright(">>>>                                            <<<<"));
+    console.log(chalk.cyanBright(">>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<"));
+    console.log(chalk.blueBright(">>>>                                            <<<<"));
+    console.log(chalk.greenBright("****                  Goodbye!                  ****"));
+    console.log(chalk.blueBright(">>>>                                            <<<<"));
+    console.log(chalk.cyanBright(">>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<"));
+
+    process.exit();
 }
-
-
