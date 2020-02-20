@@ -225,6 +225,8 @@ function addEmployee(){
 }
 
 function addRole(){
+    readDept().then(department => {
+    const getDeptChoice = department.map(({name: name, id: value}) => ({name, value}));
     inquirer
         .prompt([
             {
@@ -237,13 +239,20 @@ function addRole(){
                 type: "input",
                 message: "What is the salary for this role? Numbers only :"
             },
+            {
+                name: "userRoleDeptAdd",
+                type: "list",
+                message: "What department will this role be for?:",
+                choices: getDeptChoice
+            }
         ])
         .then(answer => {
             connection.query(
                 "INSERT INTO roles SET ?",
                 {
                     title: answer.userRoleAdd,
-                    salary: answer.userSalaryAdd
+                    salary: answer.userSalaryAdd,
+                    department_id: answer.getDeptChoice
                 },
                 (err => {
                     if (err) throw err;
@@ -253,7 +262,18 @@ function addRole(){
                 })
             )
         })
+    })    
 }
+
+
+
+
+
+
+
+
+
+
 
 
 function readRoles(){
@@ -266,15 +286,80 @@ function readRoles(){
     })
 }
 
-// function readManager(){
-//     return new Promise((resolve, reject) => {
-//         connection.query("SELECT manager.first_name, manager.last_name FROM manager;",
-//         function (err, res){
-//             if(err) reject (err);
-//             resolve(res);
-//         })
-//     })
-// }
+function readDept(){
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT * FROM department;",
+        function (err, res){
+            if(err) reject (err);
+            resolve(res);
+        })
+    })
+}
+
+
+
+
+
+
+
+
+
+
+function viewDepartment(){
+        connection.query("SELECT * FROM department;",
+        async function (err, res){
+            try {
+                if (err) throw err;
+                console.table("department", res);
+                await initiate();
+            }
+            catch(err){
+            console.log(err);
+            }
+        })
+    }
+
+
+
+
+function viewRoles(){
+        connection.query("SELECT * FROM roles;",
+        async function (err, res){
+            try {
+                if (err) throw err;
+                console.table("roles", res);
+                await initiate();
+            }
+            catch(err){
+            console.log(err);
+            }
+        })
+    }
+
+
+
+
+function viewEmployees(){
+        connection.query("SELECT * FROM employee;",
+        async function (err, res){
+            try {
+                if (err) throw err;
+                console.table("employee", res);
+                await initiate();
+            }
+            catch(err){
+            console.log(err);
+            }
+        })
+    }    
+
+
+
+
+
+
+
+
 
 
 function endProgram() {
