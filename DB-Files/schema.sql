@@ -28,3 +28,5 @@ CREATE TABLE employee (
     PRIMARY KEY (id),
     FOREIGN KEY (role_id) REFERENCES roles (id)
 );
+
+-- !Add indexes to prevent duplicates.
