@@ -29,4 +29,4 @@ CREATE TABLE employee (
     FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
--- !Add indexes to prevent duplicates.
+-- !Add indexes to prevent duplicates
