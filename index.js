@@ -356,7 +356,7 @@ function viewEmployees(){
     
 function employeeDepartment(){
     readDept().then(department => {
-        const employeeDept = department.map(({name: name, value: id}) => ({name, id}));
+        const employeeDept = department.map(({name: name, id: value}) => ({name, value}));
         inquirer
             .prompt([
                 {
@@ -367,19 +367,14 @@ function employeeDepartment(){
                 }
                 ])
                 .then(answer => {
-            // let query = "SELECT * FROM roles WHERE department_id = ?";
 
-
-            let query = "SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, roles.title FROM employee LEFT JOIN roles on roles.id = employee.role_id LEFT JOIN department ON department.id";
-
-
-
+                    let query = "SELECT * FROM employee WHERE role_id = ?";
                     connection.query(query, [answer.employeeDepartment], 
                         async function(err, res) {
                             if (err) throw err;
 
                             try {
-                                console.table(res);
+                                console.table("Roles",res);
                                 await initiate();
                             }
                             catch(err) {
@@ -391,30 +386,6 @@ function employeeDepartment(){
                     console.log(err);
                 })
                 })};
-
-
-
-
-        //     connection.query("SELECT * FROM roles;",
-        //     async function (err, res){
-        //         try {
-        //             if (err) throw err;
-        //             console.table("roles", res);
-        //             await initiate();
-        //         }
-        //         catch(err){
-        //         console.log(err);
-        //         }
-        //     })
-        // }
-
-
-    
-
-
-
-
-        // SELECT employee.id, employee.first_name, employee.last_name, roles.title FROM employee LEFT JOIN roles on employee.role_id = roles.id LEFT JOIN department department on roles.department_id = department.id WHERE department.id = ?;",
 
 
 
