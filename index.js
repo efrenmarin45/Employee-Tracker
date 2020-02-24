@@ -200,7 +200,7 @@ function addEmployee(){
             {
                 name: "employeesManager",
                 type: "input",
-                message: "Please enter the name of this employee's manager. If none, type NONE :",
+                message: "Please enter the name of this employee's manager. If none, type N/A :",
             }
         ])
         .then(answer => {
@@ -286,6 +286,8 @@ function readRoles(){
     })
 }
 
+
+
 function readDept(){
     return new Promise((resolve, reject) => {
         connection.query("SELECT * FROM department;",
@@ -353,7 +355,8 @@ function viewEmployees(){
         })
     }  
     
-    
+
+
 function employeeDepartment(){
     readDept().then(department => {
         const employeeDept = department.map(({name: name, id: value}) => ({name, value}));
@@ -388,6 +391,36 @@ function employeeDepartment(){
                 })};
 
 
+function employeeRole(){
+    readRoles().then(roles => {
+        const employeeRole = roles.map(( {title: name, id: value}) => ({name, value}));
+        inquirer
+            .prompt({
+                name: "userEmployeeRole",
+                type: "list",
+                message: "Select the role that you'd like to see the employee's for:",
+                choices: employeeRole
+            })
+            .then(answer => {
+                let query = "Select * FROM employee WHERE role_id = ?";
+                connection.query(query, [answer.userEmployeeRole],
+                    async function(err, res){
+                        if(err) throw err;
+
+                        try {
+                            console.table("Employee", res);
+                            await initiate();
+                        }
+                        catch (err){
+                            console.log(err);
+                        }
+                    })
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    })
+}
 
 
 

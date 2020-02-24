@@ -64,14 +64,20 @@ VALUES ("Office Manager", 32000, 7);
 INSERT INTO employee (first_name, last_name, role_id, manager_name)
 VALUES ("Jayden", "Marin", 1, "Bobby Flay");
 INSERT INTO employee (first_name, last_name, role_id, manager_name)
-VALUES ("Alshon", "Jeffery", 2, null);
+VALUES ("Bobby", "Flay", 3, "N/A");
 INSERT INTO employee (first_name, last_name, role_id, manager_name)
-VALUES ("Carson", "Wentz", 3, "Guy Fieri");
+VALUES ("Alshon", "Jeffery", 5, "N/A");
 INSERT INTO employee (first_name, last_name, role_id, manager_name)
-VALUES ("Nelson", "Agholor", 4, null);
+VALUES ("Carson", "Wentz", 6, "Guy Fieri");
 INSERT INTO employee (first_name, last_name, role_id, manager_name)
-VALUES ("Desaun", "Jackson", 5, "Rachel Ray");
+VALUES ("Guy", "Fieri", 7, "N/A");
 INSERT INTO employee (first_name, last_name, role_id, manager_name)
-VALUES ("Zach", "Ertz", 6, null);
+VALUES ("Nelson", "Agholor", 9, "N/A");
 INSERT INTO employee (first_name, last_name, role_id, manager_name)
-VALUES ("Donovan", "Mcnabb", 7, null);
+VALUES ("Desaun", "Jackson", 10, "Rachel Ray");
+INSERT INTO employee (first_name, last_name, role_id, manager_name)
+VALUES ("Rachel", "Ray", 11, "N/A");
+INSERT INTO employee (first_name, last_name, role_id, manager_name)
+VALUES ("Zach", "Ertz", 13, "N/A");
+INSERT INTO employee (first_name, last_name, role_id, manager_name)
+VALUES ("Donovan", "Mcnabb", 15, "N/A");
