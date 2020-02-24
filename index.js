@@ -265,97 +265,61 @@ function addRole(){
     })    
 }
 
-
-
-
-
-
-
-
-
-
-
-
-function readRoles(){
-    return new Promise((resolve, reject) => {
-        connection.query("SELECT * FROM roles;",
-        function (err, res){
-            if(err) reject (err);
-            resolve(res);
-        })
-    })
-}
-
-
-
-function readDept(){
-    return new Promise((resolve, reject) => {
-        connection.query("SELECT * FROM department;",
-        function (err, res){
-            if(err) reject (err);
-            resolve(res);
-        })
-    })
-}
-
-
-
-
-
-
-
-
-
-
 function viewDepartment(){
-        connection.query("SELECT * FROM department;",
-        async function (err, res){
-            try {
-                if (err) throw err;
-                console.table("department", res);
-                await initiate();
-            }
-            catch(err){
-            console.log(err);
-            }
-        })
-    }
-
-
-
-
-function viewRoles(){
-        connection.query("SELECT * FROM roles;",
-        async function (err, res){
-            try {
-                if (err) throw err;
-                console.table("roles", res);
-                await initiate();
-            }
-            catch(err){
-            console.log(err);
-            }
-        })
-    }
-
-
-
+    connection.query("SELECT * FROM department;",
+    async function (err, res){
+        try {
+            if (err) throw err;
+            console.table("department", res);
+            await initiate();
+        }
+        catch(err){
+        console.log(err);
+        }
+    })
+}
 
 function viewEmployees(){
-        connection.query("SELECT * FROM employee;",
-        async function (err, res){
-            try {
-                if (err) throw err;
-                console.table("employee", res);
-                await initiate();
-            }
-            catch(err){
-            console.log(err);
-            }
-        })
-    }  
-    
+    connection.query("SELECT * FROM employee;",
+    async function (err, res){
+        try {
+            if (err) throw err;
+            console.table("employee", res);
+            await initiate();
+        }
+        catch(err){
+        console.log(err);
+        }
+    })
+}  
 
+function viewRoles(){
+    connection.query("SELECT * FROM roles;",
+    async function (err, res){
+        try {
+            if (err) throw err;
+            console.table("roles", res);
+            await initiate();
+        }
+        catch(err){
+        console.log(err);
+        }
+    })
+}
+
+function viewManager(){
+    connection.query("SELECT manager_name AS Manager, CONCAT(first_name, ' ', last_name) AS Employee FROM employee;",
+    async function (err, res){
+        try {
+            if (err) throw err;
+            console.table("employee", res);
+            await initiate();
+        }
+        catch(err){
+        console.log(err);
+        }
+    })
+}
 
 function employeeDepartment(){
     readDept().then(department => {
@@ -388,8 +352,7 @@ function employeeDepartment(){
                 .catch(err => {
                     console.log(err);
                 })
-                })};
-
+    })};
 
 function employeeRole(){
     readRoles().then(roles => {
@@ -421,6 +384,32 @@ function employeeRole(){
             })
     })
 }
+
+
+// TODO: Need to include update employee / dept / and roles
+
+
+function readRoles(){
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT * FROM roles;",
+        function (err, res){
+            if(err) reject (err);
+            resolve(res);
+        })
+    })
+}
+
+function readDept(){
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT * FROM department;",
+        function (err, res){
+            if(err) reject (err);
+            resolve(res);
+        })
+    })
+}
+
+
 
 
 
