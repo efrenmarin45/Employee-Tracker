@@ -129,19 +129,22 @@ function updateEntry(){
             {
                 name: "userUpdate",
                 type: "list",
-                message: "What would you like to update?",
-                choices: ["Update a department", "Update an employee", "Update a job role", "Return to menu"]
+                message: "What would you like to change?",
+                choices: ["Delete a department", "Delete a job role", "Delete an employee", "Update an employee's role", "Return to menu"]
             }
         ])
         .then(answer => {
-            if (answer.userUpdate === "Update a department"){
-                updateDepartment();
+            if (answer.userUpdate === "Delete a department"){
+                deleteDepartment();
             }
-            else if (answer.userUpdate === "Update an employee"){
-                updateEmployee();
+            else if (answer.userUpdate === "Delete an employee"){
+                deleteEmployee();
             }
-            else if (answer.userUpdate === "Update a job role"){
-                updateRole();
+            else if (answer.userUpdate === "Delete a job role"){
+                deleteRole();
+            }
+            else if (answer.userUpdate === "Update an employee's role"){
+                updateEmployeeRole();
             }
             else if (answer.userUpdate === "Return to menu"){
                 initiate();
@@ -385,8 +388,74 @@ function employeeRole(){
     })
 }
 
+function deleteDepartment(){
+    readDept().then(department => {
+        const delDept = department.map(({name: name, id: value}) => ({name, value}));
+            inquirer
+                .prompt([
+                    {
+                        name: "deleteDept",
+                        type: "list",
+                        message: "Please choose the department you'd like to delete:",
+                        choices: delDept
+                    }
+                ])
+                .then(answer => {
+                    connection.query("DELETE FROM department WHERE id = ?", [answer.deleteDept],
+                        async function(err, res){
+                            if(err) throw err;
+                            try{
+                                console.log("Department successfully deleted!", res)
+                                await initiate();
+                            }
+                            catch(err){
+                                console.log(err);
+                            }
+                        });
+                });
+            
+    });
+};
 
-// TODO: Need to include update employee / dept / and roles
+function deleteEmployee(){
+    readEmployee().then(employee => {
+        const delEmployee = employee.map(({name: name, id: value}) => ({name, value}));
+            inquirer
+                .prompt([
+                    {
+                        name: "deleteEmp",
+                        type: "list",
+                        message: "Please select the employee that you would like to remove:",
+                        choices: delEmployee
+                    }
+                ])
+                .then(answer => {
+                    connection.query("DELETE FROM employee WHERE id = ?", [answer.deleteEmp], 
+                        async function(err, res){
+                            if(err) throw err;
+                            try {
+                                console.log("Employee successfully removed!", res);
+                                await initiate();
+                            }
+                            catch(err){
+                                console.log(err);
+                            }
+                        });
+                });
+        });
+    };
+
+
+function deleteRole(){
+    // TODO Need to finish
+}
+
+function updateEmployeeRole(){
+    // TODO Need to finish
+}
+
+
+
 
 
 function readRoles(){
@@ -408,6 +477,16 @@ function readDept(){
         })
     })
 }
+
+function readEmployee(){
+    return new promise((resolve, reject) => {
+        connection.query("SELECT * FROM employee", 
+            function(err, res){
+                if(err) reject(err);
+                resolve(res);
+            });
+    });
+};
 
 
 
