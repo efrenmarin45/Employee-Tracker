@@ -405,7 +405,7 @@ function deleteDepartment(){
                         async function(err, res){
                             if(err) throw err;
                             try{
-                                console.log("Department successfully deleted!", res)
+                                console.table("Department", res)
                                 await initiate();
                             }
                             catch(err){
@@ -419,7 +419,7 @@ function deleteDepartment(){
 
 function deleteEmployee(){
     readEmployee().then(employee => {
-        const delEmployee = employee.map(({name: name, id: value}) => ({name, value}));
+        const delEmployee = employee.map(({id: value, first_name: name}) => ({value, name}));
             inquirer
                 .prompt([
                     {
@@ -434,7 +434,7 @@ function deleteEmployee(){
                         async function(err, res){
                             if(err) throw err;
                             try {
-                                console.log("Employee successfully removed!", res);
+                                console.log("Employee successfully removed!", res)
                                 await initiate();
                             }
                             catch(err){
@@ -479,7 +479,7 @@ function readDept(){
 }
 
 function readEmployee(){
-    return new promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         connection.query("SELECT * FROM employee", 
             function(err, res){
                 if(err) reject(err);
