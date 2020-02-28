@@ -1,4 +1,3 @@
-const consoleTable = require("console.table");
 const inquirer = require("inquirer");
 const cliArt = require("figlet");
 const clear = require("clear");
@@ -172,7 +171,9 @@ function addDepartment(){
                 },
                 (err => {
                     if (err) throw err;
+                    console.log("\n");
                     console.log("Successfully added a department.")
+                    console.log("\n");
                     initiate();
                 })
             )
@@ -218,8 +219,9 @@ function addEmployee(){
                 },
                 (err => {
                     if (err) throw err;
-
+                    console.log("\n");
                     console.log("Employee added succesfully!")
+                    console.log("\n");
                     initiate();
                 })
             )
@@ -259,8 +261,9 @@ function addRole(){
                 },
                 (err => {
                     if (err) throw err;
-
+                    console.log("\n");
                     console.log("New role successfully added!")
+                    console.log("\n");
                     initiate();
                 })
             )
@@ -273,7 +276,9 @@ function viewDepartment(){
     async function (err, res){
         try {
             if (err) throw err;
+            console.log("\n");
             console.table("department", res);
+            console.log("\n");
             await initiate();
         }
         catch(err){
@@ -287,7 +292,9 @@ function viewEmployees(){
     async function (err, res){
         try {
             if (err) throw err;
+            console.log("\n");
             console.table("employee", res);
+            console.log("\n");
             await initiate();
         }
         catch(err){
@@ -301,7 +308,9 @@ function viewRoles(){
     async function (err, res){
         try {
             if (err) throw err;
+            console.log("\n");
             console.table("roles", res);
+            console.log("\n");
             await initiate();
         }
         catch(err){
@@ -315,7 +324,9 @@ function viewManager(){
     async function (err, res){
         try {
             if (err) throw err;
+            console.log("\n");
             console.table("employee", res);
+            console.log("\n");
             await initiate();
         }
         catch(err){
@@ -344,7 +355,9 @@ function employeeDepartment(){
                             if (err) throw err;
 
                             try {
+                                console.log("\n");
                                 console.table("Roles",res);
+                                console.log("\n");
                                 await initiate();
                             }
                             catch(err) {
@@ -374,7 +387,9 @@ function employeeRole(){
                         if(err) throw err;
 
                         try {
+                            console.log("\n");
                             console.table("Employee", res);
+                            console.log("\n");
                             await initiate();
                         }
                         catch (err){
@@ -405,7 +420,9 @@ function deleteDepartment(){
                         async function(err, res){
                             if(err) throw err;
                             try{
-                                console.table("Department", res)
+                                console.log("\n");
+                                console.log("Department successfully removed!")
+                                console.log("\n");
                                 await initiate();
                             }
                             catch(err){
@@ -419,7 +436,8 @@ function deleteDepartment(){
 
 function deleteEmployee(){
     readEmployee().then(employee => {
-        const delEmployee = employee.map(({id: value, first_name: name}) => ({value, name}));
+        const delEmployee = employee.map(({first_name: name, id: value}) => ({name, value}));
+
             inquirer
                 .prompt([
                     {
@@ -434,7 +452,9 @@ function deleteEmployee(){
                         async function(err, res){
                             if(err) throw err;
                             try {
-                                console.log("Employee successfully removed!", res)
+                                console.log("\n");
+                                console.log("Employee successfully removed!")
+                                console.log("\n");
                                 await initiate();
                             }
                             catch(err){
@@ -447,11 +467,76 @@ function deleteEmployee(){
 
 
 function deleteRole(){
-    // TODO Need to finish
+    readRoles().then(roles => {
+        const delRoles = roles.map(({title: name, id: value}) => ({name, value}));
+        inquirer
+            .prompt([
+                {
+                    name: "deleteRole",
+                    type: "list",
+                    message: "Please select the role you would like to remove:",
+                    choices: delRoles
+                }
+            ])
+            .then(answer => {
+                connection.query("DELETE FROM roles WHERE id = ?", [answer.deleteRole],
+                async function(err, res){
+                    if(err) throw err;
+                    try {
+                        console.log("Job role successfully removed!")
+                        await initiate();
+                    }
+                    catch(err){
+                        console.log(err);
+                    }
+                });
+            
+            })
+    })
 }
 
-function updateEmployeeRole(){
-    // TODO Need to finish
+async function updateEmployeeRole(){
+    try{
+        const roles = await readRoles();
+        const employee = await readEmployee();
+
+        const allRole = roles.map(({title: name, id: value}) => ({name, value}));
+        const allEmp = employee.map(({first_name: name, id: value}) => ({name, value}));
+
+        inquirer
+            .prompt([
+                {
+                    name: "userEmployee",
+                    type: "list",
+                    message: "Please choose the employee that you'd like to change roles:",
+                    choices: allEmp
+                },
+                {
+                    name: "userRole",
+                    type: "list",
+                    message: "Please select the new role that this employee will have:",
+                    choices: allRole
+                }
+            ])
+            .then(answer => {
+                connection.query("UPDATE employee SET role_id = ? WHERE role_id = ?;", [answer.userEmployee, answer.userRole],
+                    async function(err, res){
+                        if(err) throw err;
+                        try{
+                            console.log("\n");
+                            console.log("Employee successfully reassigned new role!");
+                            console.log("\n");
+                            await initiate();
+                        }
+                        catch(err){
+                            console.log(err);
+                        }
+                    })
+            })
+    }
+    catch(err){
+        console.log(err);
+    }
 }
 
 
