@@ -1,4 +1,5 @@
 //Packages
+const consoleTable = require("console.table");
 const inquirer = require("inquirer");
 const cliArt = require("figlet");
 const clear = require("clear");
