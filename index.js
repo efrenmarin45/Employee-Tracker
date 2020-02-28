@@ -1,3 +1,4 @@
+//Packages
 const inquirer = require("inquirer");
 const cliArt = require("figlet");
 const clear = require("clear");
@@ -6,8 +7,7 @@ const mysql = require("mysql");
 const util = require("util");
 
 
-
-
+//Creation of connection to Database
 const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -18,16 +18,22 @@ const connection = mysql.createConnection({
 connection.connect(function(err) {
     if (err) throw err;
 
+    //Initiates the clear function
     clear();
 
+    //Produces the ASCII art
     console.log(chalk.green(cliArt.textSync('Employee Tracker', {horizontalLayout: 'fitted'})));
+    console.log("\n");
 
+    //Calls the initiate function
     initiate();
 });
 
 connection.query = util.promisify(connection.query);
 
 
+
+//Begins the process of asking the user questions
 function initiate(){
     inquirer
         .prompt([
@@ -54,6 +60,9 @@ function initiate(){
 });
 }
 
+
+
+//Asks user what they would like to view
 function viewEntry(){
     inquirer
         .prompt([
@@ -93,6 +102,9 @@ function viewEntry(){
         })
 }
 
+
+
+//Asks user what they would like to add
 function addEntry(){
     inquirer
         .prompt([
@@ -122,6 +134,9 @@ function addEntry(){
         })
 }
 
+
+
+//Asks user what they would like to update
 function updateEntry(){
     inquirer
         .prompt([
@@ -154,6 +169,9 @@ function updateEntry(){
         })
 }
 
+
+
+//Asks user what department they'd like to add
 function addDepartment(){
     inquirer
         .prompt([
@@ -180,6 +198,9 @@ function addDepartment(){
         })
 }
 
+
+
+//Asks user to add employee
 function addEmployee(){
     readRoles().then(roles => {
         const userRoleChoice = roles.map(({title: name, id: value}) => ({name, value}));
@@ -229,6 +250,9 @@ function addEmployee(){
     })
 }
 
+
+
+//Asks user to add a role
 function addRole(){
     readDept().then(department => {
     const getDeptChoice = department.map(({name: name, id: value}) => ({name, value}));
@@ -271,70 +295,9 @@ function addRole(){
     })    
 }
 
-function viewDepartment(){
-    connection.query("SELECT * FROM department;",
-    async function (err, res){
-        try {
-            if (err) throw err;
-            console.log("\n");
-            console.table("department", res);
-            console.log("\n");
-            await initiate();
-        }
-        catch(err){
-        console.log(err);
-        }
-    })
-}
 
-function viewEmployees(){
-    connection.query("SELECT * FROM employee;",
-    async function (err, res){
-        try {
-            if (err) throw err;
-            console.log("\n");
-            console.table("employee", res);
-            console.log("\n");
-            await initiate();
-        }
-        catch(err){
-        console.log(err);
-        }
-    })
-}  
 
-function viewRoles(){
-    connection.query("SELECT * FROM roles;",
-    async function (err, res){
-        try {
-            if (err) throw err;
-            console.log("\n");
-            console.table("roles", res);
-            console.log("\n");
-            await initiate();
-        }
-        catch(err){
-        console.log(err);
-        }
-    })
-}
-
-function viewManager(){
-    connection.query("SELECT manager_name AS Manager, CONCAT(first_name, ' ', last_name) AS Employee FROM employee;",
-    async function (err, res){
-        try {
-            if (err) throw err;
-            console.log("\n");
-            console.table("employee", res);
-            console.log("\n");
-            await initiate();
-        }
-        catch(err){
-        console.log(err);
-        }
-    })
-}
-
+//Searches employess by department
 function employeeDepartment(){
     readDept().then(department => {
         const employeeDept = department.map(({name: name, id: value}) => ({name, value}));
@@ -368,8 +331,11 @@ function employeeDepartment(){
                 .catch(err => {
                     console.log(err);
                 })
-    })};
+})};
 
+
+
+//Searches employees by role
 function employeeRole(){
     readRoles().then(roles => {
         const employeeRole = roles.map(( {title: name, id: value}) => ({name, value}));
@@ -403,6 +369,9 @@ function employeeRole(){
     })
 }
 
+
+
+//Deletes department from DB
 function deleteDepartment(){
     readDept().then(department => {
         const delDept = department.map(({name: name, id: value}) => ({name, value}));
@@ -434,6 +403,9 @@ function deleteDepartment(){
     });
 };
 
+
+
+//Deletes employee from DB
 function deleteEmployee(){
     readEmployee().then(employee => {
         const delEmployee = employee.map(({first_name: name, id: value}) => ({name, value}));
@@ -463,9 +435,11 @@ function deleteEmployee(){
                         });
                 });
         });
-    };
+};
 
 
+
+//Deletes role from DB
 function deleteRole(){
     readRoles().then(roles => {
         const delRoles = roles.map(({title: name, id: value}) => ({name, value}));
@@ -495,6 +469,9 @@ function deleteRole(){
     })
 }
 
+
+
+//Updating an employee role
 async function updateEmployeeRole(){
     try{
         const roles = await readRoles();
@@ -541,8 +518,85 @@ async function updateEmployeeRole(){
 
 
 
+//Functions to call information from database
+
+//Views department from DB
+function viewDepartment(){
+    connection.query("SELECT * FROM department;",
+    async function (err, res){
+        try {
+            if (err) throw err;
+            console.log("\n");
+            console.table("department", res);
+            console.log("\n");
+            await initiate();
+        }
+        catch(err){
+        console.log(err);
+        }
+    })
+}
 
 
+
+//Views employees from DB
+function viewEmployees(){
+    connection.query("SELECT * FROM employee;",
+    async function (err, res){
+        try {
+            if (err) throw err;
+            console.log("\n");
+            console.table("employee", res);
+            console.log("\n");
+            await initiate();
+        }
+        catch(err){
+        console.log(err);
+        }
+    })
+}  
+
+
+
+//Views job roles from DB
+function viewRoles(){
+    connection.query("SELECT * FROM roles;",
+    async function (err, res){
+        try {
+            if (err) throw err;
+            console.log("\n");
+            console.table("roles", res);
+            console.log("\n");
+            await initiate();
+        }
+        catch(err){
+        console.log(err);
+        }
+    })
+}
+
+
+
+//Views managers from DB
+function viewManager(){
+    connection.query("SELECT manager_name AS Manager, CONCAT(first_name, ' ', last_name) AS Employee FROM employee;",
+    async function (err, res){
+        try {
+            if (err) throw err;
+            console.log("\n");
+            console.table("employee", res);
+            console.log("\n");
+            await initiate();
+        }
+        catch(err){
+        console.log(err);
+        }
+    })
+}
+
+
+
+//Retrieves job roles from DB
 function readRoles(){
     return new Promise((resolve, reject) => {
         connection.query("SELECT * FROM roles;",
@@ -553,6 +607,9 @@ function readRoles(){
     })
 }
 
+
+
+//Retrieves department from DB
 function readDept(){
     return new Promise((resolve, reject) => {
         connection.query("SELECT * FROM department;",
@@ -563,6 +620,9 @@ function readDept(){
     })
 }
 
+
+
+//Retrieves employees from DB
 function readEmployee(){
     return new Promise((resolve, reject) => {
         connection.query("SELECT * FROM employee", 
@@ -576,7 +636,7 @@ function readEmployee(){
 
 
 
-
+//End the program and cuts connection to database
 function endProgram() {
     clear();
     console.log(chalk.cyanBright(">>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<"));

@@ -1,15 +1,20 @@
+--Drops DB if it exists to start fresh 
 DROP DATABASE IF EXISTS employee_trackerDB;
 
+-- Creates a new DB
 CREATE DATABASE employee_trackerDB;
 
+-- Uses new DB
 USE employee_trackerDB;
 
+-- Creates department table
 CREATE TABLE department (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(30),
     PRIMARY KEY (id)
 );
 
+-- Creates roles table
 CREATE TABLE roles (
     id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(30),
@@ -20,6 +25,7 @@ CREATE TABLE roles (
     CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department (id) ON DELETE CASCADE
 );
 
+-- Creates employee table
 CREATE TABLE employee (
     id INT NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(30) NOT NULL,
